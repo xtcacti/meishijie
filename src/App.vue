@@ -9,16 +9,15 @@
         </div>
       </el-main>
       <el-footer>
-        <div class="footer">
-          Copyright © 2019 - 2019 
-        </div>
+        <div class="footer">Copyright © 2019 - 2019</div>
       </el-footer>
     </el-container>
-    
   </div>
 </template>
 <script>
 import Header from '@/components/header'
+import {getBanner} from '@/service/api';
+
 export default {
   components: {
     Header
@@ -27,14 +26,19 @@ export default {
 </script>
 
 <style lang="stylus">
-body 
-  background: #fae8c8
-  font-size 12px
-.main
-  width 990px
-  margin 0 auto
-.footer
-  text-align center
-  height 42px
-  line-height 42px
+body {
+  background: #fae8c8;
+  font-size: 12px;
+}
+
+.main {
+  width: 990px;
+  margin: 0 auto;
+}
+
+.footer {
+  text-align: center;
+  height: 42px;
+  line-height: 42px;
+}
 </style>
