@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {userInfo} from '@/service/api';
 Vue.use(Router)
 
 import Home from '@/views/home/Home.vue';
+import { from } from 'core-js/fn/array';
 const Login = ()=>import('@/views/user-login/login.vue');
 const Recipe = ()=>import('@/views/recipe/recipe.vue');
 const Create = ()=>import('@/views/create/create.vue');
@@ -110,7 +112,10 @@ const router = new Router({
             path:'/login',
             name:'login',
             title:'登录页',
-            component:Login
+            component:Login,
+            meta:{
+                login:true
+            }
         },
         ...viewsRoute,
         {
@@ -122,6 +127,41 @@ const router = new Router({
             }
         }
     ]
+})
+
+router.beforeEach(async (to,from,next)=>{
+    console.log(to);
+    const token = localStorage.getItem('token');
+    const isLogin = !!token;
+    //进入路由的时候，都要向后端发送token,验证合法不合法
+    //不管路由需不需要登录，都需要展示用户信息
+    //都需要向后端发请求，拿到用户信息
+    const data = await userInfo();
+    if(to.matched.some(item => item.meta.login)){
+        if(isLogin){
+            if(data.error === 400){
+                next({name:'login'});
+                localStorage.removeItem('token');
+                return;
+            }
+            if(to.name === 'login'){
+                next({name:'home'});
+            }else{
+                next();
+            }
+            return;
+        }
+        //没登录，进入的是login,直接进入
+        if(!isLogin && to.name=='login'){
+            next();
+        }
+        //没登录，进入的不是login,跳转到login
+        if(!isLogin && to.name!=='login'){
+            next({name:'login'})
+        }
+    }else{
+        next();
+    }
 })
 
 export default router;

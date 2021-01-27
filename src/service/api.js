@@ -48,10 +48,18 @@ const request = new HttpRequest({
 
 const http = request.request();
 
-export function getBanner(){
-    return http.get('/banner');
+export async function getBanner(){
+    return await http.get('/banner');
 }
 
-export function getMenus(params){
-    return http.get('/menu/query',{params});
+export async function getMenus(params){
+    return await http.get('/menu/query',{params});
+}
+
+export async function login(params){
+    return await http.post('/user/login',params);
+}
+
+export async function userInfo(params){
+  return await http.post('/user/info', params);
 }
