@@ -14,7 +14,7 @@
     <div>
       <h2>内容精选</h2>
       <!-- :info='info' -->
-      <waterfall ref="waterfall">
+      <waterfall @view="loadMenuHandle" ref="waterfall">
         <menu-card :margin-left="13" :info="menuList"></menu-card>
       </waterfall>
     </div>
@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       banners: [],
-      menuList:[]
+      menuList:[],
+      page:1
     };
   },
   mounted() {
@@ -44,12 +45,27 @@ export default {
     this.banners = data.data.list;
     // console.log(this.banners);
     });
-    getMenus({page:1}).then((data)=>{
+    getMenus({page:this.page}).then((data)=>{
       this.menuList = data.data.list;
+      this.pages = Math.ceil(data.data.total/data.data.page);
       console.log(this.menuList);
     })
   },
-  methods: {},
+  methods: {
+    loadMenuHandle(){
+      console.log("在外监听的已到可视区");
+      this.page++;
+      if(this.page>this.pages){
+        this.$refs.waterfall.isLoading = false;
+        return;
+      }
+      this.$refs.waterfall.isLoading = true;
+      getMenus({page:this.page}).then((data)=>{
+      this.menuList.push(...data.data.list);
+      this.$refs.waterfall.isLoading = false;
+    })
+    }
+  },
 };
 </script>
 <style lang="stylus">
