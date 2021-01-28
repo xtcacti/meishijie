@@ -63,3 +63,11 @@ export async function login(params){
 export async function userInfo(params){
   return await http.post('/user/info', params);
 }
+
+export async function login_out(){
+  return await http.post('/user/login_out');
+}
+
+export async function register(params){
+  return await http.post('/user/create', params);
+}

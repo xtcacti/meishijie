@@ -32,7 +32,7 @@ export default {
         document.documentElement.clientHeight
       ) {
         this.isLoading = true;
-        console.log("已到达可视区");
+        // console.log("已到达可视区");
         this.$emit("view");
       }
     },

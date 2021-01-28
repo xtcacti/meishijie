@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {userInfo} from '@/service/api';
 Vue.use(Router)
+
+import {userInfo} from '@/service/api';
+import Store from '@/store/index';
 
 import Home from '@/views/home/Home.vue';
 import { from } from 'core-js/fn/array';
 const Login = ()=>import('@/views/user-login/login.vue');
+const Register = ()=>import('@/views/user-login/register.vue');
 const Recipe = ()=>import('@/views/recipe/recipe.vue');
 const Create = ()=>import('@/views/create/create.vue');
 const Edit = ()=>import('@/views/user-space/edit.vue');
@@ -109,6 +112,12 @@ const router = new Router({
             component:Home
         },
         {
+            path:'/register',
+            name:'register',
+            title:'注册页',
+            component:Register,
+        },
+        {
             path:'/login',
             name:'login',
             title:'登录页',
@@ -130,13 +139,14 @@ const router = new Router({
 })
 
 router.beforeEach(async (to,from,next)=>{
-    console.log(to);
     const token = localStorage.getItem('token');
     const isLogin = !!token;
     //进入路由的时候，都要向后端发送token,验证合法不合法
     //不管路由需不需要登录，都需要展示用户信息
     //都需要向后端发请求，拿到用户信息
     const data = await userInfo();
+    Store.commit('changeUserInfo', data.data);
+    console.log(data);
     if(to.matched.some(item => item.meta.login)){
         if(isLogin){
             if(data.error === 400){

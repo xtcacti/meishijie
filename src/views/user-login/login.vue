@@ -20,7 +20,7 @@
         <el-button type="primary" @click="submitForm('ruleForm')"
           >提交</el-button
         >
-        <el-button>重置</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -49,12 +49,12 @@ export default {
             name: this.ruleForm.name,
             password: this.ruleForm.password,
           }).then((data) => {
-            console.log(data);
+            // console.log(data);
             if (data.code === 0) {
-              localStorage.setItem('token',data.data.token);
-              window.location.href = '/';
+              localStorage.setItem("token", data.data.token);
+              window.location.href = "/";
             }
-            if(data.code === 1){
+            if (data.code === 1) {
               this.$message.error(data.mes);
             }
           });
@@ -62,12 +62,15 @@ export default {
         }
       });
     },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
   },
 };
 </script>
 
 <style lang="stylus">
 .login-section {
-  padding: 0px 20px;
+  padding: 0px 260px;
 }
 </style>

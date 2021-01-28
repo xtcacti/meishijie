@@ -48,12 +48,12 @@ export default {
     getMenus({page:this.page}).then((data)=>{
       this.menuList = data.data.list;
       this.pages = Math.ceil(data.data.total/data.data.page);
-      console.log(this.menuList);
+      // console.log(this.menuList);
     })
   },
   methods: {
     loadMenuHandle(){
-      console.log("在外监听的已到可视区");
+      // console.log("在外监听的已到可视区");
       this.page++;
       if(this.page>this.pages){
         this.$refs.waterfall.isLoading = false;
