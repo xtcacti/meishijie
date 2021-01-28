@@ -146,7 +146,7 @@ router.beforeEach(async (to,from,next)=>{
     //都需要向后端发请求，拿到用户信息
     const data = await userInfo();
     Store.commit('changeUserInfo', data.data);
-    console.log(data);
+    // console.log(data);
     if(to.matched.some(item => item.meta.login)){
         if(isLogin){
             if(data.error === 400){
