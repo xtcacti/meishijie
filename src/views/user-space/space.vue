@@ -67,7 +67,7 @@
       <!-- <menu-card :margin-left="13"></menu-card> -->
       <!-- 粉丝 & 关注 布局 -->
       <!-- <Fans></Fans> -->
-      <router-view :info='list' :activeName='activeName'></router-view>
+      <router-view :info="list" :activeName="activeName"></router-view>
     </div>
   </div>
 </template>
@@ -80,6 +80,28 @@ import {
   fans,
   collection,
 } from "@/service/api";
+// const getOtherInfo = {
+//   async works(params){  // 作品
+//     let data = (await getMenus(params)).data;
+//     data.flag = 'works'
+//     return data;
+//   },
+//   async following(params){  // 关注
+//     let data = (await following(params)).data;;
+//     data.flag = 'following';
+//     return data;
+//   },
+//   async fans(params){  // 粉丝
+//     let data = (await fans(params)).data;;
+//     data.flag = 'fans'
+//     return data;
+//   },
+//   async collection(params){ // 收藏
+//     let data = (await collection(params)).data;
+//     data.flag = 'collection';
+//     return data
+//   }
+// }
 const getOtherInfo = {
   async works(params) {
     return (await getMenus(params)).data;
@@ -103,6 +125,7 @@ export default {
       isOwner: false,
       activeName: "works",
       list: [],
+      queen: {},
     };
   },
   watch: {
@@ -126,11 +149,27 @@ export default {
   methods: {
     async getInfo() {
       //对应路由的接口
-      let data = await getOtherInfo[this.activeName]({
-        userId: this.userInfo.userId,
-      });
-      this.list = data.list;
-      console.log(data);
+      //Q:在切换tab的时候，最后一次回来的ajax,就填充谁的数据
+      //A1: -- 在返回的数据中添加请求标识，标识相同则拿到的数据对
+      // let data = await getOtherInfo[this.activeName]({
+      //   userId: this.userInfo.userId,
+      // });
+      // if (this.activeName === data.flag) {
+      //   this.list = data.list;
+      // }
+      //A2: -- 闭包 队列的方式存取
+      // works = 作品的数据 fans = 粉丝的数据
+      (async (activeName) => {
+        let data = await getOtherInfo[this.activeName]({
+          userId: this.userInfo.userId,
+        });
+        this.queen[activeName] = data.list; // this.queen.works = 作品的数据
+        // 取当前路由name对应的数据
+        if (activeName === this.activeName) {
+          this.list = this.queen[this.activeName];
+        }
+        this.queen = {};
+      })(this.activeName);
     },
     async toggleHandler() {
       const data = await toggleFollowing({
@@ -139,6 +178,7 @@ export default {
       this.userInfo = data.data;
     },
     tabClickHandler() {
+      this.list = [];
       this.$router.push({
         name: this.activeName,
         query: {
