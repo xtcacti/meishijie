@@ -71,3 +71,7 @@ export async function login_out(){
 export async function register(params){
   return await http.post('/user/create', params);
 }
+
+export async function toggleFollowing(params){
+  return await http.post('/user/following', params);
+}

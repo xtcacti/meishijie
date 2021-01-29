@@ -6,15 +6,23 @@
         <img :src="userInfo.avatar" alt="" />
       </div>
       <div class="user-main">
-        <h1></h1>
+        <h1>{{ userInfo.name }}</h1>
         <span class="info">
-          <em>{{userInfo.createdAt}}加入美食杰</em>
+          <em>{{ userInfo.createdAt }}加入美食杰</em>
           |
-          <router-link to="">编辑个人资料</router-link>
+          <router-link to="" v-if="isOwner">编辑个人资料</router-link>
         </span>
         <div class="tools">
           <!-- follow-at  no-follow-at-->
-          <a href="javascript:;" class="follow-at"> 关注 </a>
+          <a
+            href="javascript:;"
+            class="follow-at"
+            :class="{ 'no-follow-at': userInfo.isFollowing }"
+            v-if="!isOwner"
+            @click="toggleHandler"
+          >
+            {{ userInfo.isFollowing ? "已关注" : "+ 关注" }}
+          </a>
         </div>
       </div>
 
@@ -22,25 +30,25 @@
         <li>
           <div>
             <span>关注</span>
-            <strong>{{userInfo.following_len}}</strong>
+            <strong>{{ userInfo.following_len }}</strong>
           </div>
         </li>
         <li>
           <div>
             <span>粉丝</span>
-            <strong>{{userInfo.follows_len}}</strong>
+            <strong>{{ userInfo.follows_len }}</strong>
           </div>
         </li>
         <li>
           <div>
             <span>收藏</span>
-            <strong>{{userInfo.collections_len}}</strong>
+            <strong>{{ userInfo.collections_len }}</strong>
           </div>
         </li>
         <li>
           <div>
             <span>发布菜谱</span>
-            <strong>{{userInfo.work_menus_len}}</strong>
+            <strong>{{ userInfo.work_menus_len }}</strong>
           </div>
         </li>
       </ul>
@@ -67,10 +75,10 @@
 import {
   userInfo,
   toggleFollowing,
-  getMenus,
-  following,
-  fans,
-  collection,
+  // getMenus,
+  // following,
+  // fans,
+  // collection,
 } from "@/service/api";
 
 export default {
@@ -78,25 +86,31 @@ export default {
   data() {
     return {
       userInfo: {},
+      isOwner: false,
     };
   },
   watch: {
     $route: {
       async handler() {
         let { userId } = this.$route.query;
-        if (!userId) {
+        this.isOwner = !userId || userId === this.$store.state.userInfo.userId;
+        if (this.isOwner) {
           //当前登录的对象
           this.userInfo = this.$store.state.userInfo;
-        }else{
-          const data = await userInfo({userId});
+        } else {
+          const data = await userInfo({ userId });
           this.userInfo = data.data;
-          console.log(data);
         }
       },
       immediate: true,
     },
   },
-  methods: {},
+  methods: {
+    async toggleHandler() {
+      const data = await toggleFollowing({followUserId:this.userInfo.userId});
+      this.userInfo = data.data;
+    },
+  },
 };
 </script>
 
