@@ -75,3 +75,15 @@ export async function register(params){
 export async function toggleFollowing(params){
   return await http.post('/user/following', params);
 }
+
+export async function following(params){
+  return await http.get('/user/following', {params});
+}
+
+export async function fans(params){
+  return await http.get('/user/fans', {params});
+}
+
+export async function collection(params){
+  return await http.get('/user/collection', {params});
+}

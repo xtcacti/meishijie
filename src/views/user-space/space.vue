@@ -55,7 +55,7 @@
     </div>
 
     <!-- v-model="activeName" -->
-    <el-tabs class="user-nav">
+    <el-tabs class="user-nav" v-model="activeName" @tab-click="tabClickHandle">
       <el-tab-pane label="作品" name="works"></el-tab-pane>
       <el-tab-pane label="粉丝" name="fans"></el-tab-pane>
       <el-tab-pane label="关注" name="following"></el-tab-pane>
@@ -75,11 +75,25 @@
 import {
   userInfo,
   toggleFollowing,
-  // getMenus,
-  // following,
-  // fans,
-  // collection,
+  getMenus,
+  following,
+  fans,
+  collection,
 } from "@/service/api";
+const getOtherInfo = {
+  async works(params) {
+    return (await getMenus(params)).data;
+  },
+  async following(params) {
+    return (await following(params)).data;
+  },
+  async fans(params) {
+    return (await fans(params)).data;
+  },
+  async collection(params) {
+    retuen(await collection(params)).data;
+  },
+};
 
 export default {
   name: "Space",
@@ -87,6 +101,7 @@ export default {
     return {
       userInfo: {},
       isOwner: false,
+      activeName: "works",
     };
   },
   watch: {
@@ -101,14 +116,33 @@ export default {
           const data = await userInfo({ userId });
           this.userInfo = data.data;
         }
+        this.activeName = this.$route.name;
+        this.getInfo();
       },
       immediate: true,
     },
   },
   methods: {
+    async getInfo() {
+      //对应路由的接口
+      let data = await getOtherInfo[this.activeName]({
+        userId: this.userInfo.userId,
+      });
+      console.log(data);
+    },
     async toggleHandler() {
-      const data = await toggleFollowing({followUserId:this.userInfo.userId});
+      const data = await toggleFollowing({
+        followUserId: this.userInfo.userId,
+      });
       this.userInfo = data.data;
+    },
+    tabClickHandle() {
+      this.$router.push({
+        name: this.activeName,
+        query: {
+          ...this.$route.query,
+        },
+      });
     },
   },
 };
