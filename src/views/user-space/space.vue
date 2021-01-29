@@ -55,7 +55,7 @@
     </div>
 
     <!-- v-model="activeName" -->
-    <el-tabs class="user-nav" v-model="activeName" @tab-click="tabClickHandle">
+    <el-tabs class="user-nav" v-model="activeName" @tab-click="tabClickHandler">
       <el-tab-pane label="作品" name="works"></el-tab-pane>
       <el-tab-pane label="粉丝" name="fans"></el-tab-pane>
       <el-tab-pane label="关注" name="following"></el-tab-pane>
@@ -67,7 +67,7 @@
       <!-- <menu-card :margin-left="13"></menu-card> -->
       <!-- 粉丝 & 关注 布局 -->
       <!-- <Fans></Fans> -->
-      <router-view></router-view>
+      <router-view :info='list' :activeName='activeName'></router-view>
     </div>
   </div>
 </template>
@@ -91,7 +91,7 @@ const getOtherInfo = {
     return (await fans(params)).data;
   },
   async collection(params) {
-    retuen(await collection(params)).data;
+    return (await collection(params)).data;
   },
 };
 
@@ -102,6 +102,7 @@ export default {
       userInfo: {},
       isOwner: false,
       activeName: "works",
+      list: [],
     };
   },
   watch: {
@@ -128,6 +129,7 @@ export default {
       let data = await getOtherInfo[this.activeName]({
         userId: this.userInfo.userId,
       });
+      this.list = data.list;
       console.log(data);
     },
     async toggleHandler() {
@@ -136,7 +138,7 @@ export default {
       });
       this.userInfo = data.data;
     },
-    tabClickHandle() {
+    tabClickHandler() {
       this.$router.push({
         name: this.activeName,
         query: {
