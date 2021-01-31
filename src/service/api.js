@@ -87,3 +87,11 @@ export async function fans(params){
 export async function collection(params){
   return await http.get('/user/collection', {params});
 }
+
+export async function upload(params){
+  return await http.post('/upload', {params});
+}
+
+export async function userEdit(params){
+  return await http.post('/user/edit', params);
+}

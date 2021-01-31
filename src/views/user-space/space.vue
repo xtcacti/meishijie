@@ -10,7 +10,7 @@
         <span class="info">
           <em>{{ userInfo.createdAt }}加入美食杰</em>
           |
-          <router-link to="" v-if="isOwner">编辑个人资料</router-link>
+          <router-link :to="{name:'edit'}" v-if="isOwner">编辑个人资料</router-link>
         </span>
         <div class="tools">
           <!-- follow-at  no-follow-at-->

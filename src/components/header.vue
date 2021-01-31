@@ -12,7 +12,7 @@
             <router-link to="">
               <el-avatar style="vertical-align: middle;" shape="square" size="medium" :src="userInfo.avatar"></el-avatar>
             </router-link>
-            <router-link to="" class="user-name">{{userInfo.name}}</router-link>
+            <router-link :to="{name:'space'}" class="user-name">{{userInfo.name}}</router-link>
             <router-link to="" class="collection">发布菜谱</router-link>
             <a href="javascript:;" class="collection" @click="loginOut">退出</a>
           </el-col>
