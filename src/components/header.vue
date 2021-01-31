@@ -13,7 +13,7 @@
               <el-avatar style="vertical-align: middle;" shape="square" size="medium" :src="userInfo.avatar"></el-avatar>
             </router-link>
             <router-link :to="{name:'space'}" class="user-name">{{userInfo.name}}</router-link>
-            <router-link to="" class="collection">发布菜谱</router-link>
+            <router-link :to="{name:'create'}" class="collection">发布菜谱</router-link>
             <a href="javascript:;" class="collection" @click="loginOut">退出</a>
           </el-col>
           <el-col :span="6" :offset="3" class="avatar-box" v-show="!isLogin">

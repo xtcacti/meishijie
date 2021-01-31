@@ -95,3 +95,15 @@ export async function upload(params){
 export async function userEdit(params){
   return await http.post('/user/edit', params);
 }
+
+export async function getProperty(){
+  return await http.get('/menu/property');
+}
+
+export async function getClassify(){
+  return await http.get('/menu/classify');
+}
+
+export async function publish(params){
+  return await http.post('/menu/publish', params);
+}
