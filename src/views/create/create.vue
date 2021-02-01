@@ -71,9 +71,9 @@
     <section class="create-introduce">
       <h5>主料</h5>
       <!--[ { "name": "", "specs": "" }, { "name": "", "specs": "" }, { "name": "", "specs": "" } ]-->
-      <Stuff></Stuff>
+      <Stuff v-model="backData.raw_material.main_material"></Stuff>
       <h5>辅料</h5>
-      <Stuff></Stuff>
+      <Stuff v-model="backData.raw_material.accessories_material"></Stuff>
     </section>
 
     <h2>开始写步骤了！能否简单易学就看你怎么写了，加油！</h2>
@@ -107,6 +107,11 @@ import Upload from "./step-upload";
 import UploadImg from "@/components/upload-img";
 import { getProperty, getClassify, publish } from "@/service/api";
 
+const raw_material_struct = {
+  name: "",
+  specs: "",
+};
+
 //页面中展示的数据
 //用户产生的，像后端发送的数据
 export default {
@@ -123,6 +128,14 @@ export default {
         product_pic_url:
           "https://s1.c.meishij.net/n/images/upload_big_img.png?_=1561906961",
         product_story: "",
+        raw_material: {
+          main_material: Array(3)
+            .fill(1)
+            .map(() => ({ ...raw_material_struct })),
+          accessories_material: Array(3)
+            .fill(1)
+            .map(() => ({ ...raw_material_struct })),
+        },
       },
     };
   },
