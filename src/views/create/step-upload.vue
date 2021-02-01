@@ -1,6 +1,5 @@
 <template>
   <div class="step clearfix">
-    {{value}}
     <div class="step-number">{{n}}.</div>
     <div class="upload-box">
       <upload-img 
@@ -17,7 +16,7 @@
       v-model="value.describe"
     >
     </el-input>
-    <i class="delete-icon el-icon-close"></i>
+    <i class="delete-icon el-icon-close" @click="remove"></i>
   </div>
 </template>
 <script>
@@ -41,6 +40,9 @@ export default {
         ...this.value,
         img_url:data.resImgUrl
       })
+    },
+    remove(){
+      this.$emit('remove',this.n);
     }
   },
 };

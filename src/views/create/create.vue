@@ -79,16 +79,18 @@
     <h2>开始写步骤了！能否简单易学就看你怎么写了，加油！</h2>
     <section class="create-introduce">
       <Upload
-      v-for="(item,index) in backData.steps"
-      :key="index"
-      :n="index+1"
-      v-model="backData.steps[index]"
+        v-for="(item, index) in backData.steps"
+        :key="item.customeId"
+        :n="index + 1"
+        v-model="backData.steps[index]"
+        @remove="removeStep"
       ></Upload>
       <el-button
         class="eaeaea add-step-button"
         type="primary"
         size="medium"
         icon="el-icon-plus"
+        @click="addStep"
         >增加一步</el-button
       >
       <h5>烹饪小技巧</h5>
@@ -97,11 +99,17 @@
         type="textarea"
         :rows="8"
         placeholder="分享下你做这道菜的过程中的心得和小技巧吧！"
+        v-model="backData.skill"
       >
       </el-input>
     </section>
 
-    <el-button class="send" type="primary" size="medium" :icon="icon"
+    <el-button
+      class="send"
+      type="primary"
+      size="medium"
+      :icon="icon"
+      @click="send"
       >搞定，提交审核</el-button
     >
   </div>
@@ -122,6 +130,79 @@ const steps_struct = {
   describe: "",
 };
 
+let n = 1;
+
+const mockData = {
+  title: "lxt",
+  property: {
+    craft: "1-2",
+    flavor: "2-2",
+    hard: "3-2",
+    people: "4-2",
+  },
+  classify: "1-2",
+  product_pic_url:
+    "http://127.0.0.1:7001\\static\\upload\\product\\test-product1612194263147.jpg",
+  product_story: "lxt",
+  raw_material: {
+    main_material: [
+      {
+        name: "11",
+        specs: "11",
+      },
+      {
+        name: "1122",
+        specs: "22",
+      },
+      {
+        name: "3344",
+        specs: "433",
+      },
+    ],
+    accessories_material: [
+      {
+        name: "333",
+        specs: "333",
+      },
+      {
+        name: "3332",
+        specs: "44",
+      },
+      {
+        name: "55",
+        specs: "66",
+      },
+    ],
+  },
+  steps: [
+    {
+      img_url:
+        "http://127.0.0.1:7001\\static\\upload\\step\\test1612194299682.jpg",
+      describe: "gtrbr",
+      customeId: 1612194240333,
+    },
+    {
+      img_url:
+        "http://127.0.0.1:7001\\static\\upload\\step\\test1612194308862.jpg",
+      describe: "lxt",
+      customeId: 1612194240334,
+    },
+  ],
+  skill: "lllxxxttt",
+  step: [
+    {
+      img_url:
+        "http://127.0.0.1:7001\\static\\upload\\step\\test1612194299682.jpg",
+      describe: "gtrbr",
+    },
+    {
+      img_url:
+        "http://127.0.0.1:7001\\static\\upload\\step\\test1612194308862.jpg",
+      describe: "lxt",
+    },
+  ],
+};
+
 //页面中展示的数据
 //用户产生的，像后端发送的数据
 export default {
@@ -131,6 +212,7 @@ export default {
     return {
       properties: [], //页面中展示的数据
       classifies: [],
+      icon: "",
       backData: {
         title: "",
         property: {},
@@ -146,14 +228,10 @@ export default {
             .fill(1)
             .map(() => ({ ...raw_material_struct })),
         },
-        steps: {
-          img_url: Array(3)
-            .fill(1)
-            .map(() => ({ ...steps_struct })),
-          describe: Array(3)
-            .fill(1)
-            .map(() => ({ ...steps_struct })),
-        }
+        steps: Array(3)
+          .fill(1)
+          .map(() => ({ ...steps_struct, customeId: this.uuid() })),
+        skill: "",
       },
     };
   },
@@ -166,7 +244,6 @@ export default {
       }, {});
     });
     getClassify().then((data) => {
-      console.log(data);
       this.classifies = data.data;
       this.backData.classify = data.reduce((o, item) => {
         o[item.title] = "";
@@ -174,7 +251,42 @@ export default {
       }, {});
     });
   },
-  methods: {},
+  methods: {
+    addStep() {
+      this.backData.steps.push({ ...steps_struct, customeId: this.uuid() });
+    },
+    removeStep(index) {
+      this.backData.steps.splice(index - 1, 1);
+    },
+    uuid() {
+      n++;
+      return Date.now() + n;
+    },
+    send() {
+      this.icon = "el-icon-loading";
+      const param = this.backData;
+      //customeId处理：
+      // --> 1.删除字段，当前页面需要用的这个字段可能会有问题
+      // --> 2.只提取需要用到的字段
+      param.step = param.steps.map((item) => {
+        return {
+          img_url: item.img_url,
+          describe: item.describe,
+        };
+      });
+      //测试:
+      // --> 1.测试过程中不跳转，手动打开指定的跳转页面看数据对不对
+      // --> 2.mock数据，模拟一套数据，预先转杯一套数据
+      // param = mockData;
+      console.log(JSON.stringify(param, null, 2));
+      publish(param).then((data) => {
+        console.log(data);
+        this.$router.push({
+          name: "space",
+        });
+      });
+    },
+  },
 };
 </script>
 <style lang="stylus">
