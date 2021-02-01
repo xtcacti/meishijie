@@ -78,7 +78,12 @@
 
     <h2>开始写步骤了！能否简单易学就看你怎么写了，加油！</h2>
     <section class="create-introduce">
-      <Upload></Upload>
+      <Upload
+      v-for="(item,index) in backData.steps"
+      :key="index"
+      :n="index+1"
+      v-model="backData.steps[index]"
+      ></Upload>
       <el-button
         class="eaeaea add-step-button"
         type="primary"
@@ -112,6 +117,11 @@ const raw_material_struct = {
   specs: "",
 };
 
+const steps_struct = {
+  img_url: "",
+  describe: "",
+};
+
 //页面中展示的数据
 //用户产生的，像后端发送的数据
 export default {
@@ -136,6 +146,14 @@ export default {
             .fill(1)
             .map(() => ({ ...raw_material_struct })),
         },
+        steps: {
+          img_url: Array(3)
+            .fill(1)
+            .map(() => ({ ...steps_struct })),
+          describe: Array(3)
+            .fill(1)
+            .map(() => ({ ...steps_struct })),
+        }
       },
     };
   },
