@@ -107,3 +107,15 @@ export async function getClassify(){
 export async function publish(params){
   return await http.post('/menu/publish', params);
 }
+
+export async function menuInfo(params){
+  return await http.get('/menu/menuInfo', {params});
+}
+
+export async function getComments(params){
+  return await http.get('/menu/comment', {params});
+}
+
+export async function postComment(params){
+  return await http.post('/menu/comment', params);
+}

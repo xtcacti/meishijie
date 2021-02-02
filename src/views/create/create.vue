@@ -183,6 +183,8 @@ const mockData = {
     },
     {
       img_url:
+
+      
         "http://127.0.0.1:7001\\static\\upload\\step\\test1612194308862.jpg",
       describe: "lxt",
       customeId: 1612194240334,
