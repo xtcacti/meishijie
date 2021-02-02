@@ -8,18 +8,21 @@
             1. 不显示，这个菜谱是当前用户发布的
             2. 显示，后端返回一个是否收藏的字段
           -->
-        <div class="detail-collection" v-if="!isOnwer">
+        <div class="detail-collection" v-if="!isOwner">
           <!-- collection-at  no-collection-at-->
-          <a href="javascript:;" class="collection-at"> 收藏 </a>
+          <a
+            href="javascript:;"
+            class="collection-at"
+            :class="{ 'no-collection-at': info.isCollection }"
+            @click="toggleCollection"
+          >
+            {{ info.isCollection ? "已收藏" : "收藏" }}
+          </a>
         </div>
       </div>
 
-      <ul
-        class="detail-property clearfix"
-        v-for="item in info.properties_show"
-        :key="item.type"
-      >
-        <li>
+      <ul class="detail-property clearfix">
+        <li v-for="item in info.properties_show" :key="item.type">
           <strong>{{ item.parent_name }}</strong>
           <span>{{ item.name }}</span>
         </li>
@@ -61,8 +64,26 @@ export default {
       default: () => ({}),
     },
   },
-  computed: {},
-  methods: {},
+  computed: {
+    isOwner() {
+      return this.info.userInfo.userId === this.$store.state.userInfo.userId;
+    },
+  },
+  methods: {
+    async toggleCollection() {
+      if (!this.$store.getters.isLogin) {
+        this.$message({
+          showClose: true,
+          message: "请先登录，再收藏",
+          type: "warning",
+        });
+        return;
+      }
+      const data = await toggleCollection({ menuId: this.info.menuId });
+      console.log(data);
+      this.info.isCollection = data.data.isCollection;
+    },
+  },
 };
 </script>
 

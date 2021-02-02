@@ -119,3 +119,7 @@ export async function getComments(params){
 export async function postComment(params){
   return await http.post('/menu/comment', params);
 }
+
+export async function toggleCollection(params){
+  return await http.post('/user/collection', params);
+}
