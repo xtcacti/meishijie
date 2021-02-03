@@ -6,38 +6,42 @@
   </div>
 </template>
 <script>
-import DetailHeader from './detail-header'
-import DetailContent from './detail-content'
-import Comment from './comment'
-import {menuInfo} from '@/service/api';
+import DetailHeader from "./detail-header";
+import DetailContent from "./detail-content";
+import Comment from "./comment";
+import { menuInfo } from "@/service/api";
 export default {
-  components: {DetailHeader, DetailContent, Comment},
-  data(){
+  components: { DetailHeader, DetailContent, Comment },
+  data() {
     return {
-      menuInfo:{
-        userInfo:{}
-      }
-    }
+      menuInfo: {
+        userInfo: {},
+        raw_material: {
+          main_material: [],
+          accessories_material: [],
+        },
+        stpe:[]
+      },
+    };
   },
-  watch:{
-    $route:{
-      handler(){
-        let {menuId} = this.$route.query;
-        if(menuId){
-          menuInfo({menuId}).then((data) => {
-            console.log(data.data.info);
+  watch: {
+    $route: {
+      handler() {
+        let { menuId } = this.$route.query;
+        if (menuId) {
+          menuInfo({ menuId }).then((data) => {
             this.menuInfo = data.data.info;
           });
-        }else{
+        } else {
           this.$message({
-              showClose: true,
-              message: "请重新进入",
-              type: "warning",
-            });
+            showClose: true,
+            message: "请重新进入",
+            type: "warning",
+          });
         }
       },
-      immediate:true
-    }
-  }
-}
+      immediate: true,
+    },
+  },
+};
 </script>

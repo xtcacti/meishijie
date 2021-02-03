@@ -282,7 +282,6 @@ export default {
       // param = mockData;
       console.log(JSON.stringify(param, null, 2));
       publish(param).then((data) => {
-        console.log(data);
         this.$router.push({
           name: "space",
         });

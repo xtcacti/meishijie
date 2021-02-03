@@ -123,3 +123,4 @@ export async function postComment(params){
 export async function toggleCollection(params){
   return await http.post('/user/collection', params);
 }
+
